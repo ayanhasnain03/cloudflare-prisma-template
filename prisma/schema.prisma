@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  INSTRUCTOR
+  ADMIN
+}
+
+enum Verified {
+  TRUE
+  FALSE
+}
+
+model User {
+  id String @id @default(uuid())
+  googleId String?
+  firstName String
+  lastName String
+  email String? @unique
+  password String?
+  isVerified Verified @default(FALSE)
+  phoneNumber String
+  avatar String?
+  role Role @default(USER)
+  isBlocked Boolean @default(false)
+  resetToken String?
+  resetTokenExpiresAt DateTime?
+  courses Course[] @relation("courseCreatedBy") // Many-to-many relationship
+  reviews Review[] @relation("userReviews") // Corrected from 'user' to 'reviews'
+  enrolledStudents EnrolledStudent[] @relation("userEnrolledStudents") // Corrected from 'user' to 'enrolledStudents'
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Course {
+  id String @id @default(uuid())
+  title String
+  description String
+  banner String
+  price Int
+  discountPrice Int
+  totalLectures Int
+  rating Int
+  enrolledStudents EnrolledStudent[] @relation("courseEnrolledStudents") // Corrected to plural
+  reviews Review[] @relation("courseReviews") // Fixed spelling of 'Reviews' to 'reviews'
+  categories Category[] @relation("courseCategories") // Many-to-many relationship
+  createdBy User[] @relation("courseCreatedBy") // Many-to-many relationship
+  lectures lectures[] @relation("lectureCourse")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model lectures {
+  id String @id @default(uuid())
+  title String
+  description String
+  video String
+  banner String
+  duration Int
+  courseId String
+  doubghts Doubght[] @relation("lectureDoubghts")
+  course Course @relation("lectureCourse", fields: [courseId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model Doubght {
+  id String @id @default(uuid())
+  comment String
+  avatar String
+  userId String
+  courseId String
+  lectureId String
+  lecture lectures @relation("lectureDoubghts", fields: [lectureId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model EnrolledStudent {
+  id String @id @default(uuid())
+  userId String
+  courseId String
+  course Course @relation("courseEnrolledStudents", fields: [courseId], references: [id])
+  user User @relation("userEnrolledStudents", fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Review {
+  id String @id @default(uuid())
+  avatar String?
+  rating Int
+  comment String
+  userId String
+  courseId String
+  course Course @relation("courseReviews", fields: [courseId], references: [id])
+  user User @relation("userReviews", fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id String @id @default(uuid())
+  categoryName String @unique
+  courses Course[] @relation("courseCategories") // Many-to-many relationship
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

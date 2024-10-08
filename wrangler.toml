@@ -1,0 +1,7 @@
+name = "anim-dresz"
+main = "src/index.ts"
+compatibility_date = "2024-09-25"  # Temporary compatibility date
+compatibility_flags = [ "nodejs_compat" ]
+
+[vars]
+DATABASE_URL = "prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiY2FkNjZkNjEtYzA1My00YjRlLWJlZmYtZjg4Y2E3ZjhlNjRmIiwidGVuYW50X2lkIjoiYmE5Zjc1OTg2NDk4NzdmODIyNGE0ZTAyMjI4OTc0NTk1YTFlMmIyOGQ5NTk4YmIwMjMwZTM2NWZkMTYzYmFkYSIsImludGVybmFsX3NlY3JldCI6ImI5NGIxYTRhLWI1M2MtNDdhNy05MTEwLTVlODdkOTc1M2VhMiJ9.ivsnhNeRFqGVvwh3_CYAiME24VRNvce_Z4VPOpSxUOo"
